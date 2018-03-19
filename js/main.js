@@ -1,5 +1,5 @@
-
 var map;
+
 function initMap() {
     // Create a map object and specify the DOM element for display.
     map = new google.maps.Map(document.getElementById('map'), {
@@ -15,5 +15,11 @@ function initMap() {
         lng: -74.99802439999996
     };
 
-    var marker = new google.maps.Marker({ position: tribeca, map: map, title: 'first marker' });
+    var marker = new google.maps.Marker({ position: tribeca, map: map, title: 'first marker', animation: google.maps.Animation.BOUNCE });
+
+    var infoWindow = new google.maps.InfoWindow({ content: 'this is center point!' });
+    marker.addListener('click', function(event) {
+        infoWindow.open(map, marker);
+        marker.setAnimation(null);
+    });
 }
