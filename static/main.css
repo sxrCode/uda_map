@@ -1,13 +1,78 @@
 html,
 body {
-    height: 100%;
-    padding: 0px;
-    margin: 0px;
     font-family: Arial, sans-serif;
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
-#map,
-.slide {
-    width: 30px;
-    height: 30px;
+.container {
+    height: 100%;
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+input {
+    font-size: 12px;
+}
+
+h1 {
+    color: #525454;
+    font-size: 22px;
+    margin: 0 0 10px 0;
+    text-align: center;
+}
+
+#hide-listings,
+#show-listings {
+    width: 48%;
+}
+
+#map {
+    flex-grow: 1;
+}
+
+.options-box {
+    background: rgb(8, 0, 0);
+    height: 100%;
+    line-height: 35px;
+    padding: 10px 10px 30px 10px;
+    text-align: left;
+    width: 340px;
+}
+
+.title-bar {
+    height: 50px;
+    background-color: #525454;
+}
+
+.filter-contrl {
+    display: flex;
+    border-radius: 3px;
+    margin: 3px;
+    height: 40px;
+}
+
+.filter-contrl div.input-content {
+    height: 100%;
+    background-color: aliceblue;
+    flex-grow: 3;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+    padding: 5px;
+}
+
+.filter-contrl div.input-content input {
+    width: auto;
+    height: auto;
+}
+
+.filter-contrl .fliter-button {
+    height: 100%;
+    background-color: cornflowerblue;
+    flex-grow: 1;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
