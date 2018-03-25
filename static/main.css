@@ -25,12 +25,7 @@ h1 {
     text-align: center;
 }
 
-#hide-listings,
-#show-listings {
-    width: 48%;
-}
-
-#map {
+#map-content {
     flex-grow: 1;
 }
 
@@ -43,36 +38,79 @@ h1 {
     width: 340px;
 }
 
-.title-bar {
-    height: 50px;
-    background-color: #525454;
-}
-
 .filter-contrl {
     display: flex;
     border-radius: 3px;
     margin: 3px;
-    height: 40px;
+    height: 30px;
 }
 
 .filter-contrl div.input-content {
-    height: 100%;
     background-color: aliceblue;
     flex-grow: 3;
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
     padding: 5px;
+    display: flex;
 }
 
 .filter-contrl div.input-content input {
-    width: auto;
-    height: auto;
+    border: 0;
+    flex-grow: 1;
 }
 
 .filter-contrl .fliter-button {
     height: 100%;
     background-color: cornflowerblue;
     flex-grow: 1;
+    line-height: 30px;
+    padding-left: 10px;
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
+}
+
+.filter-contrl .fliter-button:hover {
+    cursor: pointer;
+    background-color: blue;
+}
+
+.filter-contrl .fliter-button i {
+    color: white;
+}
+
+.list-content {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.list-content .list-item {
+    color: darkgrey;
+}
+
+.list-content .list-item:hover {
+    color: white;
+    background-color: rgb(70, 3, 3);
+    cursor: pointer;
+}
+
+.title-bar {
+    height: 50px;
+    background-color: #525454;
+}
+
+#hb-icon {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+}
+
+#hb-icon i.fa-bars {
+    color: steelblue;
+}
+
+#hb-icon i.fa-bars:hover {
+    color: teal;
+    cursor: pointer;
 }
