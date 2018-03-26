@@ -70,7 +70,7 @@ function initMap() {
         // Push the marker to our array of markers.
         markers.push(marker);
         // Create an onclick event to open an infowindow at each marker.
-        marker.addListener('click', function () {
+        marker.addListener('click', function() {
             populateInfoWindow(this, largeInfowindow);
         });
     }
@@ -86,7 +86,7 @@ function populateInfoWindow(marker, infowindow) {
         infowindow.setContent('<div>' + marker.title + '</div>');
         infowindow.open(map, marker);
         // Make sure the marker property is cleared if the infowindow is closed.
-        infowindow.addListener('closeclick', function () {
+        infowindow.addListener('closeclick', function() {
             infowindow.marker = null;
         });
     }
@@ -108,4 +108,69 @@ function hideListings() {
     for (var i = 0; i < markers.length; i++) {
         markers[i].setMap(null);
     }
+}
+
+
+var listViewController = {
+    renderData: function(datas) {
+
+    },
+}
+
+var mapViewController = {
+    renderData: function(datas) {
+
+    },
+}
+
+function LocationManager() {
+    var locations = [];
+
+    function innerlocationManager() {};
+
+    innerlocationManager.prototype = LocationManager.prototype;
+
+    innerlocationManager.prototype.add = function(location) {
+        locations.push(location);
+    };
+
+    innerlocationManager.prototype.getById = function(id) {
+        let result = null;
+        locations.forEach(function(currentValue, index, array) {
+            if (currentValue.id === id) {
+                result = currentValue;
+            }
+        });
+    }
+
+    innerlocationManager.prototype.delete = function(id) {
+        locations.forEach(function(currentValue, index, array) {
+            if (currentValue.id === id) {
+                array.splice(index, 1);
+            }
+        });
+        return result;
+    }
+
+    innerlocationManager.prototype.query = function(search) {
+        let results = [];
+        locations.forEach(function(currentValue, index, array) {
+            if (currentValue.title.indexOf(search) != -1) {
+                results.push(deepClone(currentValue));
+            }
+        });
+
+        return results;
+    };
+
+    return new innerlocationManager();
+}
+
+function deepClone(obj) {
+    var newObj = obj instanceof Array ? [] : {};
+    for (var i in obj) {
+        newObj[i] = typeof obj[i] == 'object' ?
+            deepClone(obj[i]) : obj[i];
+    }
+    return newObj;
 }
