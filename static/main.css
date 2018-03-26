@@ -71,7 +71,7 @@ h1 {
 
 .filter-contrl .fliter-button:hover {
     cursor: pointer;
-    background-color: blue;
+    background-color: rgb(76, 76, 230);
 }
 
 .filter-contrl .fliter-button i {
