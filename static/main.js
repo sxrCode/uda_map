@@ -39,15 +39,56 @@ var locations = [{
     }
 }];
 
+$(document).ready(function () {
+    init();
+});
+
+function init() {
+    let listViewController = new ListViewController();
+
+    let locationManager = new LocationManager();
+    locationManager.add({
+        title: 'Park Ave Penthouse',
+        location: {
+            lat: 40.7713024,
+            lng: -73.9632393
+        }
+    }).add({
+        title: 'Chelsea Loft',
+        location: {
+            lat: 40.7444883,
+            lng: -73.9949465
+        }
+    });
+
+    let result = locationManager.query('');
+    console.log('result: ' + result.length);
+    listViewController.renderData(result);
+}
+
 function initMap() {
-    // Constructor creates a new map - only center and zoom are required.
+
 
 }
 
-var listViewController = {
-    renderData: function (datas) {
+function ListViewController() {
 
-    },
+    let listContainer = document.getElementById('list-container');
+    function innerClass() { };
+    innerClass.prototype = ListViewController.prototype;
+
+    innerClass.prototype.renderData = function (datas) {
+        if (datas && datas.length) {
+            let i = 0;
+            for (i = 0; i < datas.length; i++) {
+                let location = datas[i];
+                let item = $('<div class="list-item">Ashby</div>');
+                $(item).html(location.title);
+                $(listContainer).append(item);
+            }
+        }
+
+    };
 }
 
 var mapViewController = function () {
@@ -135,6 +176,7 @@ function LocationManager() {
 
     innerlocationManager.prototype.add = function (location) {
         locations.push(location);
+        return this;
     };
 
     innerlocationManager.prototype.getById = function (id) {
@@ -156,9 +198,15 @@ function LocationManager() {
     }
 
     innerlocationManager.prototype.query = function (search) {
+        if (search == null) {
+            search = '';
+        }
+        let conditon = search.replace(/(^\s*)|(\s*$)/g, "").toLowerCase();
+
         let results = [];
         locations.forEach(function (currentValue, index, array) {
-            if (currentValue.title.indexOf(search) != -1) {
+            let title = currentValue.title.toLowerCase();
+            if (title.indexOf(conditon) != -1) {
                 results.push(deepClone(currentValue));
             }
         });
