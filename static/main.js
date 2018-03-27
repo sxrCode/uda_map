@@ -30,16 +30,17 @@ function AppController() {
         $('#filter-btn').click(function() {
             let search = $('#search-input').val();
             let result = locationManager.query(search);
-            console.log('result length: ' + result.length);
             listViewController.renderData(result);
             mapViewController.renderData(result);
         });
     }
 
     innerClass.prototype.initMap = function() {
-        console.log('initMap!');
-        //mapViewController.init();
         $('#filter-btn').click();
+    };
+
+    innerClass.prototype.onSelectItem = function(location) {
+        mapViewController.selectMarker(location);
     };
 
     function initLocationManager() {
@@ -103,6 +104,9 @@ function ListViewController() {
                 let location = datas[i];
                 let item = $('<div class="list-item">Ashby</div>');
                 $(item).html(location.title);
+                $(item).click(function() {
+                    appController.onSelectItem(location);
+                });
                 $(listContainer).append(item);
             }
         }
@@ -166,7 +170,19 @@ function MapViewController() {
         largeInfowindow = new google.maps.InfoWindow();
     }
 
+    innerClass.prototype.selectMarker = function(location) {
 
+        for (let i = 0; i < markers.length; i++) {
+            let marker = markers[i];
+            if (marker.getTitle() == location.title) {
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+                setTimeout(function() {
+                    marker.setAnimation(null);
+                }, 1000);
+                break;
+            }
+        }
+    };
 
     // This function populates the infowindow when the marker is clicked. We'll only allow
     // one infowindow which will open at the marker that is clicked, and populate based
