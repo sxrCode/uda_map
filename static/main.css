@@ -29,6 +29,10 @@ h1 {
     flex-grow: 1;
 }
 
+#map {
+    height: 100%;
+}
+
 .options-box {
     background: rgb(8, 0, 0);
     height: 100%;
@@ -69,6 +73,10 @@ h1 {
     border-bottom-right-radius: 3px;
 }
 
+.filter-contrl input:focus {
+    outline: none;
+}
+
 .filter-contrl .fliter-button:hover {
     cursor: pointer;
     background-color: rgb(76, 76, 230);
@@ -82,6 +90,8 @@ h1 {
     display: flex;
     flex-direction: column;
     padding: 20px;
+    height: 90%;
+    overflow-y: scroll;
 }
 
 .list-content .list-item {

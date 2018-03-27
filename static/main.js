@@ -1,85 +1,104 @@
-
-// These are the real estate listings that will be shown to the user.
-// Normally we'd have these in a database instead.
-var locations = [{
-    title: 'Park Ave Penthouse',
-    location: {
-        lat: 40.7713024,
-        lng: -73.9632393
-    }
-}, {
-    title: 'Chelsea Loft',
-    location: {
-        lat: 40.7444883,
-        lng: -73.9949465
-    }
-}, {
-    title: 'Union Square Open Floor Plan',
-    location: {
-        lat: 40.7347062,
-        lng: -73.9895759
-    }
-}, {
-    title: 'East Village Hip Studio',
-    location: {
-        lat: 40.7281777,
-        lng: -73.984377
-    }
-}, {
-    title: 'TriBeCa Artsy Bachelor Pad',
-    location: {
-        lat: 40.7195264,
-        lng: -74.0089934
-    }
-}, {
-    title: 'Chinatown Homey Space',
-    location: {
-        lat: 40.7180628,
-        lng: -73.9961237
-    }
-}];
-
-$(document).ready(function () {
-    init();
+let appController;
+$(document).ready(function() {
+    appController = new AppController();
+    appController.init();
 });
-
-function init() {
-    let listViewController = new ListViewController();
-
-    let locationManager = new LocationManager();
-    locationManager.add({
-        title: 'Park Ave Penthouse',
-        location: {
-            lat: 40.7713024,
-            lng: -73.9632393
-        }
-    }).add({
-        title: 'Chelsea Loft',
-        location: {
-            lat: 40.7444883,
-            lng: -73.9949465
-        }
-    });
-
-    let result = locationManager.query('');
-    console.log('result: ' + result.length);
-    listViewController.renderData(result);
-}
 
 function initMap() {
 
-
+    appController.initMap();
 }
+
+function AppController() {
+    let listViewController;
+    let locationManager;
+    let mapViewController;
+
+    let filterControl;
+
+    function innerClass() {};
+    innerClass.prototype = AppController.prototype;
+
+    innerClass.prototype.init = function() {
+        listViewController = new ListViewController();
+        locationManager = new LocationManager();
+        mapViewController = new MapViewController();
+        initLocationManager();
+        let result = locationManager.query('');
+        listViewController.renderData(result);
+
+        $('#filter-btn').click(function() {
+            let search = $('#search-input').val();
+            let result = locationManager.query(search);
+            console.log('result length: ' + result.length);
+            listViewController.renderData(result);
+            mapViewController.renderData(result);
+        });
+    }
+
+    innerClass.prototype.initMap = function() {
+        console.log('initMap!');
+        //mapViewController.init();
+        $('#filter-btn').click();
+    };
+
+    function initLocationManager() {
+
+        locationManager.add({
+            title: 'Park Ave Penthouse',
+            location: {
+                lat: 40.7713024,
+                lng: -73.9632393
+            }
+        }).add({
+            title: 'Chelsea Loft',
+            location: {
+                lat: 40.7444883,
+                lng: -73.9949465
+            }
+        }).add({
+            title: 'Union Square Open Floor Plan',
+            location: {
+                lat: 40.7347062,
+                lng: -73.9895759
+            }
+        }).add({
+            title: 'East Village Hip Studio',
+            location: {
+                lat: 40.7281777,
+                lng: -73.984377
+            }
+        }).add({
+            title: 'TriBeCa Artsy Bachelor Pad',
+            location: {
+                lat: 40.7195264,
+                lng: -74.0089934
+            }
+        }).add({
+            title: 'Chinatown Homey Space',
+            location: {
+                lat: 40.7180628,
+                lng: -73.9961237
+            }
+        });
+
+    }
+}
+
+
+
 
 function ListViewController() {
 
     let listContainer = document.getElementById('list-container');
-    function innerClass() { };
+
+    function innerClass() {};
     innerClass.prototype = ListViewController.prototype;
 
-    innerClass.prototype.renderData = function (datas) {
+    innerClass.prototype.renderData = function(datas) {
         if (datas && datas.length) {
             let i = 0;
+            $(listContainer).html('');
             for (i = 0; i < datas.length; i++) {
                 let location = datas[i];
                 let item = $('<div class="list-item">Ashby</div>');
@@ -89,48 +108,65 @@ function ListViewController() {
         }
 
     };
+
+    return new innerClass();
 }
 
-var mapViewController = function () {
+function MapViewController() {
 
     var map;
-
-    // Create a new blank array for all the listing markers.
     var markers = [];
-    this.renderData = function (datas) {
+    var largeInfowindow = null;
+
+
+    function innerClass() {};
+    innerClass.prototype = MapViewController.prototype;
+
+    innerClass.prototype.renderData = function(locations) {
+        if (map == null) {
+            this.init();
+        }
+        hideListings();
+        markers = [];
+
+        for (var i = 0; i < locations.length; i++) {
+            // Get the position from the location array.
+            let position = locations[i].location;
+            let title = locations[i].title;
+            // Create a marker per location, and put into markers array.
+            let marker = new google.maps.Marker({
+                position: position,
+                title: title,
+                map: map,
+                animation: google.maps.Animation.DROP,
+                id: i
+            });
+            // Push the marker to our array of markers.
+            markers.push(marker);
+            // Create an onclick event to open an infowindow at each marker.
+            marker.addListener('click', function() {
+                populateInfoWindow(this, largeInfowindow);
+            });
+        }
+
+        showListings();
 
     };
 
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: {
-            lat: 40.7413549,
-            lng: -73.9980244
-        },
-        zoom: 13,
-        mapTypeControl: false
-    });
-
-    var largeInfowindow = new google.maps.InfoWindow();
-
-    // The following group uses the location array to create an array of markers on initialize.
-    for (var i = 0; i < locations.length; i++) {
-        // Get the position from the location array.
-        var position = locations[i].location;
-        var title = locations[i].title;
-        // Create a marker per location, and put into markers array.
-        var marker = new google.maps.Marker({
-            position: position,
-            title: title,
-            animation: google.maps.Animation.DROP,
-            id: i
+    innerClass.prototype.init = function() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: {
+                lat: 40.7281777,
+                lng: -73.9980244
+            },
+            zoom: 13,
+            mapTypeControl: false
         });
-        // Push the marker to our array of markers.
-        markers.push(marker);
-        // Create an onclick event to open an infowindow at each marker.
-        marker.addListener('click', function () {
-            populateInfoWindow(this, largeInfowindow);
-        });
+
+        largeInfowindow = new google.maps.InfoWindow();
     }
+
+
 
     // This function populates the infowindow when the marker is clicked. We'll only allow
     // one infowindow which will open at the marker that is clicked, and populate based
@@ -142,7 +178,7 @@ var mapViewController = function () {
             infowindow.setContent('<div>' + marker.title + '</div>');
             infowindow.open(map, marker);
             // Make sure the marker property is cleared if the infowindow is closed.
-            infowindow.addListener('closeclick', function () {
+            infowindow.addListener('closeclick', function() {
                 infowindow.marker = null;
             });
         }
@@ -165,31 +201,33 @@ var mapViewController = function () {
             markers[i].setMap(null);
         }
     }
+
+    return new innerClass();
 }
 
 function LocationManager() {
     var locations = [];
 
-    function innerlocationManager() { };
+    function innerlocationManager() {};
 
     innerlocationManager.prototype = LocationManager.prototype;
 
-    innerlocationManager.prototype.add = function (location) {
+    innerlocationManager.prototype.add = function(location) {
         locations.push(location);
         return this;
     };
 
-    innerlocationManager.prototype.getById = function (id) {
+    innerlocationManager.prototype.getById = function(id) {
         let result = null;
-        locations.forEach(function (currentValue, index, array) {
+        locations.forEach(function(currentValue, index, array) {
             if (currentValue.id === id) {
                 result = currentValue;
             }
         });
     }
 
-    innerlocationManager.prototype.delete = function (id) {
-        locations.forEach(function (currentValue, index, array) {
+    innerlocationManager.prototype.delete = function(id) {
+        locations.forEach(function(currentValue, index, array) {
             if (currentValue.id === id) {
                 array.splice(index, 1);
             }
@@ -197,14 +235,14 @@ function LocationManager() {
         return result;
     }
 
-    innerlocationManager.prototype.query = function (search) {
+    innerlocationManager.prototype.query = function(search) {
         if (search == null) {
             search = '';
         }
         let conditon = search.replace(/(^\s*)|(\s*$)/g, "").toLowerCase();
 
         let results = [];
-        locations.forEach(function (currentValue, index, array) {
+        locations.forEach(function(currentValue, index, array) {
             let title = currentValue.title.toLowerCase();
             if (title.indexOf(conditon) != -1) {
                 results.push(deepClone(currentValue));
