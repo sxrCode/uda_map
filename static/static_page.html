@@ -9,6 +9,7 @@
     <link rel="stylesheet prefetch" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
     <script src="jquery-3.1.1.js"></script>
+    <script src="knockout-3.4.2.js"></script>
     <script src="main.js"></script>
 </head>
 
@@ -25,8 +26,9 @@
                 </div>
             </div>
 
-            <div id="list-container" class="list-content">
+            <div id="list-container" class="list-content" data-bind="foreach: locations">
                 <!-- <div class="list-item">Ashby</div> -->
+                <div class="list-item" data-bind="text: title"></div>
             </div>
 
 

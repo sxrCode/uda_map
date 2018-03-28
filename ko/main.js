@@ -1,12 +1,22 @@
-// Here's my data model
-var ViewModel = function (first, last) {
-    this.firstName = ko.observable(first);
-    this.lastName = ko.observable(last);
+var BetterListModel = function () {
+    this.itemToAdd = ko.observable("");
+    this.allItems = ko.observableArray(["Fries", "Eggs Benedict", "Ham", "Cheese"]); // Initial items
+    this.selectedItems = ko.observableArray(["Ham"]);                                // Initial selection
 
-    this.fullName = ko.computed(function () {
-        // Knockout tracks dependencies automatically. It knows that fullName depends on firstName and lastName, because these get called when evaluating fullName.
-        return this.firstName() + " " + this.lastName();
-    }, this);
+    this.addItem = function () {
+        if ((this.itemToAdd() != "") && (this.allItems.indexOf(this.itemToAdd()) < 0)) // Prevent blanks and duplicates
+            this.allItems.push(this.itemToAdd());
+        this.itemToAdd(""); // Clear the text box
+    };
+
+    this.removeSelected = function () {
+        this.allItems.removeAll(this.selectedItems());
+        this.selectedItems([]); // Clear selection
+    };
+
+    this.sortItems = function () {
+        this.allItems.sort();
+    };
 };
 
-ko.applyBindings(new ViewModel("Planet", "Earth")); // This makes Knockout get to work
+ko.applyBindings(new BetterListModel());

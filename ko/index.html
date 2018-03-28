@@ -12,16 +12,20 @@
 </head>
 
 <body>
-    <div class='liveExample'>
-        <p>First name:
-            <input data-bind='value: firstName' />
-        </p>
-        <p>Last name:
-            <input data-bind='value: lastName' />
-        </p>
-        <h2>Hello,
-            <span data-bind='text: fullName'> </span>!</h2>
+    <form data-bind="submit:addItem">
+        Add item:
+        <input type="text" data-bind='value:itemToAdd, valueUpdate: "afterkeydown"' />
+        <button type="submit" data-bind="enable: itemToAdd().length > 0">Add</button>
+    </form>
+
+    <p>Your values:</p>
+    <select multiple="multiple" height="5" data-bind="options:allItems, selectedOptions:selectedItems"> </select>
+
+    <div>
+        <button data-bind="click: removeSelected, enable: selectedItems().length > 0">Remove</button>
+        <button data-bind="click: sortItems, enable: allItems().length > 1">Sort</button>
     </div>
+
     <script src="main.js"></script>
 </body>
 
