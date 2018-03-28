@@ -1,5 +1,5 @@
 let appController;
-$(document).ready(function() {
+$(document).ready(function () {
     appController = new AppController();
     appController.init();
 });
@@ -16,10 +16,10 @@ function AppController() {
 
     let filterControl;
 
-    function innerClass() {};
+    function innerClass() { };
     innerClass.prototype = AppController.prototype;
 
-    innerClass.prototype.init = function() {
+    innerClass.prototype.init = function () {
         listViewController = new ListViewController();
         locationManager = new LocationManager();
         mapViewController = new MapViewController();
@@ -27,7 +27,14 @@ function AppController() {
         let result = locationManager.query('');
         listViewController.renderData(result);
 
-        $('#filter-btn').click(function() {
+        $("#search-input").keyup(function (event) {
+            console.log("input: " + event.which);
+            if (event.which == 13) { //回车键
+                $('#filter-btn').click();
+            }
+        });
+
+        $('#filter-btn').click(function () {
             let search = $('#search-input').val();
             let result = locationManager.query(search);
             listViewController.renderData(result);
@@ -35,11 +42,11 @@ function AppController() {
         });
     }
 
-    innerClass.prototype.initMap = function() {
+    innerClass.prototype.initMap = function () {
         $('#filter-btn').click();
     };
 
-    innerClass.prototype.onSelectItem = function(location) {
+    innerClass.prototype.onSelectItem = function (location) {
         mapViewController.selectMarker(location);
     };
 
@@ -93,10 +100,10 @@ function ListViewController() {
 
     let listContainer = document.getElementById('list-container');
 
-    function innerClass() {};
+    function innerClass() { };
     innerClass.prototype = ListViewController.prototype;
 
-    innerClass.prototype.renderData = function(datas) {
+    innerClass.prototype.renderData = function (datas) {
         if (datas && datas.length) {
             let i = 0;
             $(listContainer).html('');
@@ -104,7 +111,7 @@ function ListViewController() {
                 let location = datas[i];
                 let item = $('<div class="list-item">Ashby</div>');
                 $(item).html(location.title);
-                $(item).click(function() {
+                $(item).click(function () {
                     appController.onSelectItem(location);
                 });
                 $(listContainer).append(item);
@@ -123,10 +130,10 @@ function MapViewController() {
     var largeInfowindow = null;
 
 
-    function innerClass() {};
+    function innerClass() { };
     innerClass.prototype = MapViewController.prototype;
 
-    innerClass.prototype.renderData = function(locations) {
+    innerClass.prototype.renderData = function (locations) {
         if (map == null) {
             this.init();
         }
@@ -148,7 +155,7 @@ function MapViewController() {
             // Push the marker to our array of markers.
             markers.push(marker);
             // Create an onclick event to open an infowindow at each marker.
-            marker.addListener('click', function() {
+            marker.addListener('click', function () {
                 populateInfoWindow(this, largeInfowindow);
             });
         }
@@ -157,7 +164,7 @@ function MapViewController() {
 
     };
 
-    innerClass.prototype.init = function() {
+    innerClass.prototype.init = function () {
         map = new google.maps.Map(document.getElementById('map'), {
             center: {
                 lat: 40.7281777,
@@ -170,13 +177,13 @@ function MapViewController() {
         largeInfowindow = new google.maps.InfoWindow();
     }
 
-    innerClass.prototype.selectMarker = function(location) {
+    innerClass.prototype.selectMarker = function (location) {
 
         for (let i = 0; i < markers.length; i++) {
             let marker = markers[i];
             if (marker.getTitle() == location.title) {
                 marker.setAnimation(google.maps.Animation.BOUNCE);
-                setTimeout(function() {
+                setTimeout(function () {
                     marker.setAnimation(null);
                 }, 1000);
                 break;
@@ -194,7 +201,7 @@ function MapViewController() {
             infowindow.setContent('<div>' + marker.title + '</div>');
             infowindow.open(map, marker);
             // Make sure the marker property is cleared if the infowindow is closed.
-            infowindow.addListener('closeclick', function() {
+            infowindow.addListener('closeclick', function () {
                 infowindow.marker = null;
             });
         }
@@ -224,26 +231,26 @@ function MapViewController() {
 function LocationManager() {
     var locations = [];
 
-    function innerlocationManager() {};
+    function innerlocationManager() { };
 
     innerlocationManager.prototype = LocationManager.prototype;
 
-    innerlocationManager.prototype.add = function(location) {
+    innerlocationManager.prototype.add = function (location) {
         locations.push(location);
         return this;
     };
 
-    innerlocationManager.prototype.getById = function(id) {
+    innerlocationManager.prototype.getById = function (id) {
         let result = null;
-        locations.forEach(function(currentValue, index, array) {
+        locations.forEach(function (currentValue, index, array) {
             if (currentValue.id === id) {
                 result = currentValue;
             }
         });
     }
 
-    innerlocationManager.prototype.delete = function(id) {
-        locations.forEach(function(currentValue, index, array) {
+    innerlocationManager.prototype.delete = function (id) {
+        locations.forEach(function (currentValue, index, array) {
             if (currentValue.id === id) {
                 array.splice(index, 1);
             }
@@ -251,14 +258,14 @@ function LocationManager() {
         return result;
     }
 
-    innerlocationManager.prototype.query = function(search) {
+    innerlocationManager.prototype.query = function (search) {
         if (search == null) {
             search = '';
         }
         let conditon = search.replace(/(^\s*)|(\s*$)/g, "").toLowerCase();
 
         let results = [];
-        locations.forEach(function(currentValue, index, array) {
+        locations.forEach(function (currentValue, index, array) {
             let title = currentValue.title.toLowerCase();
             if (title.indexOf(conditon) != -1) {
                 results.push(deepClone(currentValue));
