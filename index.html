@@ -4,15 +4,49 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>map</title>
+    <title>Page Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet prefetch" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" media="screen" href="./style/main.css" />
+    <script src="./js/jquery-3.1.1.js"></script>
+    <script src="./js/knockout-3.4.2.js"></script>
     <script src="./js/main.js"></script>
 </head>
 
 <body>
-    <div id="map"></div>
-    <script defer async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPiOXwyiAYPIH0xO3cNnzviyQfwL9WhR4&callback=initMap"></script>
+    <div class="container">
+        <div class="options-box">
+            <h1>Bart Locations</h1>
+
+            <div id="filter-control" class="filter-contrl">
+                <div class="input-content">
+                    <input id="search-input" class="input" type="text" placeholder="Station Location" data-bind="value: searchText" />
+                </div>
+                <div id="filter-btn" class="fliter-button" data-bind="click: filter">
+                    <i class="fa fa-filter "> Filter</i>
+                </div>
+            </div>
+
+            <div id="list-container" class="list-content" data-bind=" foreach: locations">
+                <div class="list-item" data-bind="text: title, click: $parent.clickItem"></div>
+            </div>
+
+        </div>
+        <div id="map-content">
+            <div class="title-bar">
+                <div id="hb-icon">
+                    <i class="fa fa-bars "></i>
+                </div>
+            </div>
+            <div id="map"></div>
+        </div>
+        <!-- <div class="tip-box">地图API加载出错！</div> -->
+    </div>
+
+
+    <script defer async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBPiOXwyiAYPIH0xO3cNnzviyQfwL9WhR4&callback=initMap&libraries=places" onerror="onLoadFail();">
+    </script>
+
 </body>
 
 </html>
