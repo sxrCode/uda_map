@@ -82,40 +82,46 @@ function AppController() {
     function initLocationManager() {
 
         locationManager.add({
-            title: 'Park Ave Penthouse',
+            title: '北京大学',
+            id: 'B000A816R6',
             location: {
-                lat: 40.7713024,
-                lng: -73.9632393
+                lat: 116.31088,
+                lng: 39.99281
             }
         }).add({
-            title: 'Chelsea Loft',
+            title: '清华大学',
+            id: 'B000A7BD6C',
             location: {
-                lat: 40.7444883,
-                lng: -73.9949465
+                lat: 116.326836,
+                lng: 40.00366
             }
         }).add({
-            title: 'Union Square Open Floor Plan',
+            title: '对外经济贸易大学',
+            id: 'B000A7C66K',
             location: {
-                lat: 40.7347062,
-                lng: -73.9895759
+                lat: 116.427721,
+                lng: 39.980381
             }
         }).add({
-            title: 'East Village Hip Studio',
+            title: '北京航空航天大学',
+            id: 'B000A830XU',
             location: {
-                lat: 40.7281777,
-                lng: -73.984377
+                lat: 116.347313,
+                lng: 39.981771
             }
         }).add({
-            title: 'TriBeCa Artsy Bachelor Pad',
+            title: '北京师范大学',
+            id: 'B000A83JHK',
             location: {
-                lat: 40.7195264,
-                lng: -74.0089934
+                lat: 116.365798,
+                lng: 39.961576
             }
         }).add({
-            title: 'Chinatown Homey Space',
+            title: '中央戏剧学院',
+            id: 'B000A81FPJ',
             location: {
-                lat: 40.7180628,
-                lng: -73.9961237
+                lat: 116.403983,
+                lng: 39.935663
             }
         });
 
@@ -172,7 +178,7 @@ function MapViewController() {
         hideListings();
         markers = [];
 
-        for (var i = 0; i < locations.length; i++) {
+        for (let i = 0; i < locations.length; i++) {
 
             let position = locations[i].location;
             let title = locations[i].title;
@@ -182,13 +188,25 @@ function MapViewController() {
                 title: title,
                 map: map,
                 animation: google.maps.Animation.DROP,
-                id: i
+                id: locations[i].id
             });
 
             markers.push(marker);
 
             marker.addListener('click', function() {
-                populateInfoWindow(this, largeInfowindow);
+                $.ajax({
+                    url: "http://restapi.amap.com/v3/place/detail?key=69fab4e7412af193e13a36a7878a76bb&extensions=all&id=" + locations[i].id,
+                    async: true,
+                    success: function(data, textStatus, jqXHR) {
+                        if (data.pois.length > 0) {
+                            let poiInfo = data.pois[0];
+                            let content = template('tpl-info', poiInfo);
+                            populateInfoWindow(marker, content);
+                        }
+                        console.log(data.pois);
+                    },
+                });
+
             });
         }
 
@@ -210,7 +228,6 @@ function MapViewController() {
     }
 
     innerClass.prototype.selectMarker = function(location) {
-
         for (let i = 0; i < markers.length; i++) {
             let marker = markers[i];
             if (marker.getTitle() == location.title) {
@@ -224,11 +241,11 @@ function MapViewController() {
     };
 
 
-    function populateInfoWindow(marker, infowindow) {
-
+    function populateInfoWindow(marker, content) {
+        let infowindow = largeInfowindow;
         if (infowindow.marker != marker) {
             infowindow.marker = marker;
-            infowindow.setContent('<div>' + marker.title + '</div>');
+            infowindow.setContent(content);
             infowindow.open(map, marker);
 
             infowindow.addListener('closeclick', function() {

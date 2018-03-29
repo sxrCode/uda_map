@@ -134,3 +134,32 @@ h1 {
     left: 50%;
     background-color: peachpuff;
 }
+
+.info-container {
+    display: flex;
+}
+
+.info-container .left-panal {
+    display: flex;
+    flex-direction: column;
+}
+
+.left-panal img {
+    width: 80%;
+    margin: auto;
+    height: 70px;
+}
+
+.left-panal p {
+    max-width: 100px;
+    word-wrap: break-word;
+    word-break: break-all;
+    overflow: hidden;
+}
+
+.info-container .right-panal {
+    display: flex;
+    margin-left: 5px;
+    flex-direction: column;
+    justify-content: space-around;
+}
