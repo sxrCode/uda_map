@@ -51,15 +51,28 @@
     <script id="tpl-info" type="text/html">
         <div class="info-container">
             <div class="left-panal">
-                <img/>
-                <div class="intro"><span>介绍: </span>
-                    <p>介绍1351351adsgsgaregqewgqgqwegqetqwet</p>
+                <img src="{{photos[0].url}}" />
+                <div class="intro">
+                    <span>介绍: </span> {{if photos[0].title.length > 0}}
+                    <p>{{photos[0].title}}</p>
+                    {{else}}
+                    <p>暂无介绍</p>
+                    {{/if}}
                 </div>
             </div>
             <div class="right-panal">
-                <div><span>名称</span>: <span>{{data.name}}</span></div>
-                <div><span>地址</span>: <span>{{data.address}}</span></div>
-                <div><span>网址</span>: <span>{{data.website}}</span></div>
+                <div>
+                    <span>名称</span>:
+                    <span>{{name}}</span>
+                </div>
+                <div>
+                    <span>地址</span>:
+                    <span>{{adname}}{{address}}</span>
+                </div>
+                <div>
+                    <span>网址</span>:
+                    <span>{{website}}</span>
+                </div>
             </div>
         </div>
     </script>
