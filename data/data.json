@@ -1,0 +1,50 @@
+{
+	locations: [{
+		title: '北京大学',
+		id: 'B000A816R6',
+		location: {
+			lat: 116.31088,
+			lng: 39.99281
+		}
+	},
+	{
+		title: '清华大学',
+		id: 'B000A7BD6C',
+		location: {
+			lat: 116.326836,
+			lng: 40.00366
+		}
+	},
+	{
+		title: '对外经济贸易大学',
+		id: 'B000A7C66K',
+		location: {
+			lat: 116.427721,
+			lng: 39.980381
+		}
+	},
+	{
+		title: '北京航空航天大学',
+		id: 'B000A830XU',
+		location: {
+			lat: 116.347313,
+			lng: 39.981771
+		}
+	},
+	{
+		title: '北京师范大学',
+		id: 'B000A83JHK',
+		location: {
+			lat: 116.365798,
+			lng: 39.961576
+		}
+	},
+	{
+		title: '中央戏剧学院',
+		id: 'B000A81FPJ',
+		location: {
+			lat: 116.403983,
+			lng: 39.935663
+		}
+	}]
+}

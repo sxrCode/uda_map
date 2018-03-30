@@ -34,7 +34,7 @@ function AppController() {
     innerClass.prototype.init = function () {
         locationManager = new LocationManager();
         mapViewController = new MapViewController();
-        initLocationManager();
+        initLocationManager(); //初始化数据
 
         $("#search-input").keyup(function (event) {
             if (event.which == 13) { //回车键筛选
@@ -42,6 +42,7 @@ function AppController() {
             }
         });
 
+        //隐藏列表
         $("#hb-icon").click(function () {
             let box = $("div.options-box")[0];
             $(box).toggleClass('hide');
@@ -130,6 +131,21 @@ function AppController() {
             }
         });
 
+        /*
+        通过加载json文件形式载入数据，存在跨域访问问题，尚未解决
+        $.ajax({
+            url: "data/data.json",
+            type: "GET",
+            async: false,
+            dataType: "jsonp", 
+            success: function (data) {
+                $.each(data.locations, function (i, item) {
+                    locationManager.add(item);
+                });
+            }
+        });
+        */
+
     }
 
     return new innerClass();
@@ -157,7 +173,6 @@ function FilterControl() {
     this.searchText = ko.observable('');
     this.filter = function () {
         let search = this.searchText();
-        console.log('search: ' + search);
         appController.onFilter(search);
 
     }.bind(this);
@@ -208,7 +223,6 @@ function MapViewController() {
                             let content = template('tpl-info', poiInfo);
                             populateInfoWindow(marker, content);
                         }
-                        //console.log(data.pois);
                     },
                     error: function (jqXHR, textStatus, errorThrown) {
                         let content = '<div>信息获取失败！</div>';
