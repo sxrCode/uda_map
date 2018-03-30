@@ -2,7 +2,7 @@
  * 最高层控制器
  */
 let appController = new AppController();;
-$(document).ready(function() {
+$(document).ready(function () {
     appController.init();
 });
 
@@ -28,18 +28,23 @@ function AppController() {
 
     let filterControl;
 
-    function innerClass() {};
+    function innerClass() { };
     innerClass.prototype = AppController.prototype;
 
-    innerClass.prototype.init = function() {
+    innerClass.prototype.init = function () {
         locationManager = new LocationManager();
         mapViewController = new MapViewController();
         initLocationManager();
 
-        $("#search-input").keyup(function(event) {
+        $("#search-input").keyup(function (event) {
             if (event.which == 13) { //回车键筛选
                 $('#filter-btn').click();
             }
+        });
+
+        $("#hb-icon").click(function () {
+            let box = $("div.options-box")[0];
+            $(box).toggleClass('hide');
         });
 
         let result = locationManager.query('');
@@ -54,7 +59,7 @@ function AppController() {
         );
     }
 
-    innerClass.prototype.initMap = function() {
+    innerClass.prototype.initMap = function () {
         $('#filter-btn').click();
     };
 
@@ -62,7 +67,7 @@ function AppController() {
      * 筛选处理
      * @param {*} search 
      */
-    innerClass.prototype.onFilter = function(search) {
+    innerClass.prototype.onFilter = function (search) {
         let result = locationManager.query(search);
         listViewModel.renderData(result);
         mapViewController.renderData(result);
@@ -72,7 +77,7 @@ function AppController() {
      * 地点选中处理
      * @param {*} location 
      */
-    innerClass.prototype.onSelectItem = function(location) {
+    innerClass.prototype.onSelectItem = function (location) {
         mapViewController.selectMarker(location);
     };
 
@@ -136,11 +141,11 @@ function AppController() {
  */
 function ListViewModel(locations) {
     this.locations = ko.observableArray(locations);
-    this.renderData = function(datas) {
+    this.renderData = function (datas) {
         this.locations(datas);
     };
 
-    this.clickItem = function() {
+    this.clickItem = function () {
         appController.onSelectItem(this);
     };
 }
@@ -150,7 +155,7 @@ function ListViewModel(locations) {
  */
 function FilterControl() {
     this.searchText = ko.observable('');
-    this.filter = function() {
+    this.filter = function () {
         let search = this.searchText();
         console.log('search: ' + search);
         appController.onFilter(search);
@@ -168,10 +173,10 @@ function MapViewController() {
     var largeInfowindow = null;
 
 
-    function innerClass() {};
+    function innerClass() { };
     innerClass.prototype = MapViewController.prototype;
 
-    innerClass.prototype.renderData = function(locations) {
+    innerClass.prototype.renderData = function (locations) {
         if (map == null) {
             this.init();
         }
@@ -193,17 +198,21 @@ function MapViewController() {
 
             markers.push(marker);
 
-            marker.addListener('click', function() {
+            marker.addListener('click', function () {
                 $.ajax({
                     url: "http://restapi.amap.com/v3/place/detail?key=69fab4e7412af193e13a36a7878a76bb&extensions=all&id=" + locations[i].id,
                     async: true,
-                    success: function(data, textStatus, jqXHR) {
+                    success: function (data, textStatus, jqXHR) {
                         if (data.pois.length > 0) {
                             let poiInfo = data.pois[0];
                             let content = template('tpl-info', poiInfo);
                             populateInfoWindow(marker, content);
                         }
-                        console.log(data.pois);
+                        //console.log(data.pois);
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        let content = '<div>信息获取失败！</div>';
+                        populateInfoWindow(marker, content);
                     },
                 });
 
@@ -214,7 +223,7 @@ function MapViewController() {
 
     };
 
-    innerClass.prototype.init = function() {
+    innerClass.prototype.init = function () {
         map = new google.maps.Map(document.getElementById('map'), {
             center: {
                 lat: 40.7281777,
@@ -227,12 +236,12 @@ function MapViewController() {
         largeInfowindow = new google.maps.InfoWindow();
     }
 
-    innerClass.prototype.selectMarker = function(location) {
+    innerClass.prototype.selectMarker = function (location) {
         for (let i = 0; i < markers.length; i++) {
             let marker = markers[i];
             if (marker.getTitle() == location.title) {
                 marker.setAnimation(google.maps.Animation.BOUNCE);
-                setTimeout(function() { //跳动1秒后取消动画
+                setTimeout(function () { //跳动1秒后取消动画
                     marker.setAnimation(null);
                 }, 1000);
                 break;
@@ -248,7 +257,7 @@ function MapViewController() {
             infowindow.setContent(content);
             infowindow.open(map, marker);
 
-            infowindow.addListener('closeclick', function() {
+            infowindow.addListener('closeclick', function () {
                 infowindow.marker = null;
             });
         }
@@ -278,26 +287,26 @@ function MapViewController() {
 function LocationManager() {
     var locations = [];
 
-    function innerlocationManager() {};
+    function innerlocationManager() { };
 
     innerlocationManager.prototype = LocationManager.prototype;
 
-    innerlocationManager.prototype.add = function(location) {
+    innerlocationManager.prototype.add = function (location) {
         locations.push(location);
         return this;
     };
 
-    innerlocationManager.prototype.getById = function(id) {
+    innerlocationManager.prototype.getById = function (id) {
         let result = null;
-        locations.forEach(function(currentValue, index, array) {
+        locations.forEach(function (currentValue, index, array) {
             if (currentValue.id === id) {
                 result = currentValue;
             }
         });
     }
 
-    innerlocationManager.prototype.delete = function(id) {
-        locations.forEach(function(currentValue, index, array) {
+    innerlocationManager.prototype.delete = function (id) {
+        locations.forEach(function (currentValue, index, array) {
             if (currentValue.id === id) {
                 array.splice(index, 1);
             }
@@ -309,14 +318,14 @@ function LocationManager() {
      * 查询数据
      * @param {查询条件} search 
      */
-    innerlocationManager.prototype.query = function(search) {
+    innerlocationManager.prototype.query = function (search) {
         if (search == null) {
             search = '';
         }
         let conditon = search.replace(/(^\s*)|(\s*$)/g, "").toLowerCase();
 
         let results = [];
-        locations.forEach(function(currentValue, index, array) {
+        locations.forEach(function (currentValue, index, array) {
             let title = currentValue.title.toLowerCase();
             if (title.indexOf(conditon) != -1) {
                 results.push(deepClone(currentValue));

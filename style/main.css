@@ -39,7 +39,21 @@ h1 {
     line-height: 35px;
     padding: 10px 10px 30px 10px;
     text-align: left;
-    width: 340px;
+    width: 25%;
+    min-width: 240px;
+}
+
+div.hide {
+    width: 0;
+    min-width: 0;
+    padding: 0;
+    transition: width 0.3s;
+    -moz-transition: width 0.3s;
+    /* Firefox 4 */
+    -webkit-transition: width 0.3s;
+    /* Safari 和 Chrome */
+    -o-transition: width 0.3s;
+    /* Opera */
 }
 
 .filter-contrl {
